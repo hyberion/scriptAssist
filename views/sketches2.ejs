@@ -1,0 +1,37 @@
+<!-- Wappler include head-page="layouts/main" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="sketches2" appConnect="local" -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-white">Guidance</h5>
+        </div>
+    </div>
+    <div class="guidance" onclick="toggleGuidance(this)">
+        <strong>💡 Guidance:</strong> Click to expand for agent notes.
+        <div class="guidance-content">
+            Speak confidently and use a friendly tone. Let the customer finish before moving to the next step.
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-white">Instruction</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="instructions">
+            <strong>🔹 Instruction:</strong> Wait for the customer to confirm before proceeding.
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function toggleGuidance(element) {
+        let content = element.querySelector('.guidance-content');
+        if (content) {
+            content.style.display = (content.style.display === "none" || content.style.display === "") ? "block" : "none";
+        }
+    }
+</script>
+<meta name="ac:route" content="/sketches2">

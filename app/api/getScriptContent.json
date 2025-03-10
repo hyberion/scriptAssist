@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "number",
+        "name": "sectionid"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "getLinesbySection",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "scriptContent",
+              "column": "scriptLine",
+              "aggregate": ""
+            }
+          ],
+          "params": [
+            {
+              "operator": "equal",
+              "type": "expression",
+              "name": ":P1",
+              "value": "{{$_GET.sectionid}}",
+              "test": "23"
+            }
+          ],
+          "table": {
+            "name": "scriptContent"
+          },
+          "primary": "id",
+          "joins": [],
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "scriptContent.sectionID",
+                "field": "scriptContent.sectionID",
+                "type": "double",
+                "operator": "equal",
+                "value": "{{$_GET.sectionid}}",
+                "data": {
+                  "table": "scriptContent",
+                  "column": "sectionID",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "reference",
+                    "primary": false,
+                    "nullable": true,
+                    "references": "id",
+                    "inTable": "section",
+                    "referenceType": "integer",
+                    "onUpdate": "NO ACTION",
+                    "onDelete": "NO ACTION",
+                    "name": "sectionID"
+                  }
+                },
+                "operation": "=",
+                "table": "scriptContent"
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "query": "select `scriptLine` from `scriptContent` where `scriptContent`.`sectionID` = ? order by `lineSortOrder` ASC",
+          "orders": [
+            {
+              "table": "scriptContent",
+              "column": "lineSortOrder",
+              "direction": "ASC"
+            }
+          ],
+          "distinct": false
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "text",
+          "name": "scriptLine"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

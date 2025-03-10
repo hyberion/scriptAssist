@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "sectionQuerry",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "section",
+              "column": "id"
+            },
+            {
+              "table": "section",
+              "column": "sectionName"
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "section"
+          },
+          "primary": "id",
+          "joins": [],
+          "orders": [
+            {
+              "table": "section",
+              "column": "sectionSortOrder",
+              "direction": "ASC"
+            }
+          ],
+          "query": "select `id`, `sectionName` from `section` order by `sectionSortOrder` ASC"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "sectionName"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

@@ -1,0 +1,1559 @@
+{
+  "direct": true,
+  "type": "mysql2",
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 9906,
+    "user": "db_user",
+    "password": "H1e6WAwc",
+    "database": "scriptassist-build"
+  },
+  "schema": {
+    "tables": {
+      "script": {
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "name": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": false
+            }
+          },
+          "description": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "agencyID": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "agency",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "active": {
+            "db": {
+              "type": "boolean",
+              "default": "'1'",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "version": {
+            "db": {
+              "type": "integer",
+              "default": "'1'",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "default": "knex.fn.now()",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "default": "knex.fn.now()",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "refs": {
+          "presentations": "scriptId"
+        }
+      },
+      "section": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "sectionName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": false
+            }
+          },
+          "sectionSortOrder": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "active": {
+            "db": {
+              "type": "boolean",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true,
+              "default": "knex.fn.now()"
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true,
+              "default": "knex.fn.now()"
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "slide": "sectionID",
+          "scriptContent": "sectionID"
+        }
+      },
+      "agency": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "name": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "address": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "city": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "state": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "zip": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "phone": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "email": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "website": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "industry": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "active": {
+            "db": {
+              "type": "boolean",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "dateCreated": {
+            "db": {
+              "type": "timestamp",
+              "default": "knex.fn.now()",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastUpdated": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "script": "agencyID",
+          "agent": "agency"
+        }
+      },
+      "scriptForms": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "formName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "formHTML": {
+            "db": {
+              "type": "text",
+              "maxLength": 65535,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "formActive": {
+            "db": {
+              "type": "boolean",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "scriptContent": "formId"
+        }
+      },
+      "presentations": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "scriptId": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "script",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        }
+      },
+      "agent": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "firstName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "email": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "password": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "phone": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "status": {
+            "db": {
+              "type": "enum",
+              "enumValues": [
+                "active",
+                "inactive",
+                "suspended"
+              ],
+              "maxLength": 9,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastLogin": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "datetime",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "agency": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "agency",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        }
+      },
+      "slide": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "slideTitle": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "slideDescription": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "slideURL": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "sectionID": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "section",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "sortOrder": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "scriptVersion": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "active": {
+            "db": {
+              "type": "boolean",
+              "default": "'0'",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "slideContent": {
+            "db": {
+              "type": "text",
+              "maxLength": 65535,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "customerData": {
+            "db": {
+              "type": "json",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "slideType": {
+            "db": {
+              "type": "string",
+              "maxLength": 50,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        }
+      },
+      "scriptContentType": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "typeName": {
+            "db": {
+              "type": "string",
+              "maxLength": 50,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "defaultClass": {
+            "db": {
+              "type": "string",
+              "maxLength": 50,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "scriptContent": "contentType"
+        }
+      },
+      "scriptContent": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "scriptLine": {
+            "db": {
+              "type": "text",
+              "maxLength": 16777215,
+              "primary": false,
+              "nullable": false
+            }
+          },
+          "lineSortOrder": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "nullable": false
+            }
+          },
+          "sectionID": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": false,
+              "references": "id",
+              "inTable": "section",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "active": {
+            "db": {
+              "type": "boolean",
+              "primary": false,
+              "nullable": true,
+              "default": "'1'"
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true,
+              "default": "knex.fn.now()"
+            }
+          },
+          "updatedAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "contentType": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "scriptContentType",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "cssOverrideClass": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "formId": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "scriptForms",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        }
+      },
+      "relationship_type_lookup": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "relationship_Type": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "client_relationships": "relationship_type_id",
+          "referrals": "relationshipType"
+        }
+      },
+      "marital_status_lookup": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "martialStatus": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "client": "marital_status"
+        }
+      },
+      "client_relationships": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "client_id_1": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "client",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "client_id_2": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "client",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "relationship_type_id": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "relationship_type_lookup",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "parent": "client"
+      },
+      "address_type_lookup": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "addressType": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        }
+      },
+      "stateLookup": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "stateCode": {
+            "db": {
+              "type": "string",
+              "maxLength": 2,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "stateName": {
+            "db": {
+              "type": "string",
+              "maxLength": 50,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "address": "state"
+        }
+      },
+      "address": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "streetAddress": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "aptSuite": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "city": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "state": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "stateLookup",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "zipCode": {
+            "db": {
+              "type": "string",
+              "maxLength": 20,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastUpdated": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "refs": {
+          "client_address": "addressId"
+        }
+      },
+      "client_address": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "clientId": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "client",
+              "referenceType": "integer",
+              "onUpdate": "CASCADE",
+              "onDelete": "CASCADE"
+            }
+          },
+          "addressId": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "address",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "addressType": {
+            "db": {
+              "type": "integer",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "isPrimary": {
+            "db": {
+              "type": "boolean",
+              "default": "'1'",
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "parent": "client"
+      },
+      "client": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "firstName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "dob": {
+            "db": {
+              "type": "date",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "phone": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "email": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "created_at": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "updated_at": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "marital_status": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "marital_status_lookup",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "notes": {
+            "db": {
+              "type": "text",
+              "maxLength": 65535,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {
+          "engine": "InnoDB",
+          "schema": "scriptassist-build",
+          "collation": "utf8mb4_unicode_ci",
+          "system_versioned": false
+        },
+        "sub": {
+          "client_relationships": "client_id_1",
+          "client_address": "clientId"
+        },
+        "refs": {
+          "client_relationships": "client_id_2",
+          "referrals": "clientId"
+        }
+      },
+      "referrals": {
+        "columns": {
+          "id": {
+            "db": {
+              "type": "increments",
+              "primary": true,
+              "nullable": false
+            }
+          },
+          "clientId": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "client",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "firstName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "lastName": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "relationshipType": {
+            "db": {
+              "type": "reference",
+              "primary": false,
+              "nullable": true,
+              "references": "id",
+              "inTable": "relationship_type_lookup",
+              "referenceType": "integer",
+              "onUpdate": "NO ACTION",
+              "onDelete": "NO ACTION"
+            }
+          },
+          "phone": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "email": {
+            "db": {
+              "type": "string",
+              "maxLength": 255,
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "createdAt": {
+            "db": {
+              "type": "timestamp",
+              "primary": false,
+              "nullable": true
+            }
+          },
+          "notes": {
+            "db": {
+              "type": "text",
+              "maxLength": 65535,
+              "primary": false,
+              "nullable": true
+            }
+          }
+        },
+        "db": {}
+      }
+    },
+    "views": {},
+    "collations": [
+      {
+        "collation": "utf8mb4_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_0900_as_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_0900_bin",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_bg_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_bg_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_bin",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_bs_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_bs_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_croatian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_cs_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_cs_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_czech_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_danish_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_da_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_da_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_de_pb_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_de_pb_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_eo_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_eo_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_esperanto_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_estonian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_es_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_es_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_es_trad_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_es_trad_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_et_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_et_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_general_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_german2_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_gl_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_gl_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_hr_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_hr_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_hungarian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_hu_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_hu_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_icelandic_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_is_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_is_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ja_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ja_0900_as_cs_ks",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_latvian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_la_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_la_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_lithuanian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_lt_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_lt_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_lv_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_lv_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_mn_cyrl_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_mn_cyrl_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_nb_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_nb_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_nn_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_nn_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_persian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_pl_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_pl_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_polish_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_romanian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_roman_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ro_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ro_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ru_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_ru_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sinhala_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sk_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sk_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_slovak_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_slovenian_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sl_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sl_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_spanish2_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_spanish_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sr_latn_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sr_latn_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sv_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_sv_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_swedish_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_tr_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_tr_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_turkish_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_unicode_520_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_unicode_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_vietnamese_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_vi_0900_ai_ci",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_vi_0900_as_cs",
+        "charset": "utf8mb4"
+      },
+      {
+        "collation": "utf8mb4_zh_0900_as_cs",
+        "charset": "utf8mb4"
+      }
+    ]
+  }
+}

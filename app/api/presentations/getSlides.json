@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "getSlides",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "slide",
+              "column": "slideTitle",
+              "recid": 1
+            },
+            {
+              "table": "slide",
+              "column": "slideDescription",
+              "recid": 2
+            },
+            {
+              "table": "slide",
+              "column": "slideURL",
+              "recid": 3
+            },
+            {
+              "table": "slide",
+              "column": "slideContent",
+              "recid": 4
+            },
+            {
+              "table": "slide",
+              "column": "sortOrder",
+              "recid": 5
+            }
+          ],
+          "params": [],
+          "table": {
+            "name": "slide"
+          },
+          "primary": "id",
+          "joins": [],
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "slide.active",
+                "field": "slide.active",
+                "type": "boolean",
+                "operator": "equal",
+                "value": true,
+                "data": {
+                  "table": "slide",
+                  "column": "active",
+                  "type": "boolean",
+                  "columnObj": {
+                    "type": "boolean",
+                    "default": "'0'",
+                    "primary": false,
+                    "nullable": true,
+                    "name": "active"
+                  }
+                },
+                "operation": "=",
+                "table": "slide"
+              },
+              {
+                "id": "slide.sectionID",
+                "field": "slide.sectionID",
+                "type": "double",
+                "operator": "equal",
+                "value": 43,
+                "data": {
+                  "table": "slide",
+                  "column": "sectionID",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "reference",
+                    "primary": false,
+                    "nullable": true,
+                    "references": "id",
+                    "inTable": "section",
+                    "referenceType": "integer",
+                    "onUpdate": "CASCADE",
+                    "onDelete": "CASCADE",
+                    "name": "sectionID"
+                  }
+                },
+                "operation": "=",
+                "table": "slide"
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "orders": [
+            {
+              "table": "slide",
+              "column": "sortOrder",
+              "direction": "ASC",
+              "recid": 1
+            }
+          ],
+          "query": "select `slideTitle`, `slideDescription`, `slideURL`, `slideContent`, `sortOrder` from `slide` where `slide`.`active` = ? and `slide`.`sectionID` = ? order by `sortOrder` ASC"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "text",
+          "name": "slideTitle"
+        },
+        {
+          "type": "text",
+          "name": "slideDescription"
+        },
+        {
+          "type": "text",
+          "name": "slideURL"
+        },
+        {
+          "type": "text",
+          "name": "slideContent"
+        },
+        {
+          "type": "number",
+          "name": "sortOrder"
+        }
+      ],
+      "outputType": "array"
+    }
+  }
+}

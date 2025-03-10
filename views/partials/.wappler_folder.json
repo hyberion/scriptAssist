@@ -1,0 +1,15 @@
+{
+  "index.ejs": {
+    "description": "",
+    "layoutPage": "public"
+  },
+  "slideshow.ejs": {
+    "description": ""
+  },
+  "slideBuilder2.ejs": {
+    "description": ""
+  },
+  "sketches.ejs": {
+    "description": "Examples of Script Elements"
+  }
+}

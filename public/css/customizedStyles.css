@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+
+#subTitle {
+    font-weight: 100;
+    font-family: Nunito;
+    font-weight: 200;
+    font-size: 12px  
+}
+
+
+#titlePlaceholder{
+    font-family: Nunito;
+    font-weight: 200;
+    font-size: 12px 
+}
+
+
+link{   
+}
+
+
+div.scriptContent{
+    background-color: blue;
+    margin-top: 12px;
+    width: 90%;
+    color: #ffffff;
+    border-radius: 22px;
+    padding: 15px;
+    text-align: center    
+}

@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "$_GET": [
+      {
+        "type": "text",
+        "name": "sort"
+      },
+      {
+        "type": "text",
+        "name": "dir"
+      },
+      {
+        "type": "text",
+        "name": "slideid"
+      }
+    ]
+  },
+  "exec": {
+    "steps": {
+      "name": "getSingleSlide",
+      "module": "dbconnector",
+      "action": "select",
+      "options": {
+        "connection": "db",
+        "sql": {
+          "type": "select",
+          "columns": [
+            {
+              "table": "slide",
+              "column": "*"
+            }
+          ],
+          "params": [
+            {
+              "operator": "equal",
+              "type": "expression",
+              "name": ":P1",
+              "value": "{{$_GET.slideid}}",
+              "test": "5"
+            }
+          ],
+          "table": {
+            "name": "slide"
+          },
+          "primary": "id",
+          "joins": [],
+          "wheres": {
+            "condition": "AND",
+            "rules": [
+              {
+                "id": "slide.id",
+                "field": "slide.id",
+                "type": "double",
+                "operator": "equal",
+                "value": "{{$_GET.slideid}}",
+                "data": {
+                  "table": "slide",
+                  "column": "id",
+                  "type": "number",
+                  "columnObj": {
+                    "type": "increments",
+                    "primary": true,
+                    "nullable": false,
+                    "name": "id"
+                  }
+                },
+                "operation": "="
+              }
+            ],
+            "conditional": null,
+            "valid": true
+          },
+          "query": "select * from `slide` where `slide`.`id` = ?"
+        }
+      },
+      "output": true,
+      "meta": [
+        {
+          "type": "number",
+          "name": "id"
+        },
+        {
+          "type": "text",
+          "name": "slideTitle"
+        },
+        {
+          "type": "text",
+          "name": "slideDescription"
+        },
+        {
+          "type": "text",
+          "name": "slideURL"
+        },
+        {
+          "type": "number",
+          "name": "sectionID"
+        },
+        {
+          "type": "number",
+          "name": "sortOrder"
+        },
+        {
+          "type": "number",
+          "name": "scriptVersion"
+        },
+        {
+          "type": "boolean",
+          "name": "active"
+        },
+        {
+          "type": "text",
+          "name": "slideContent"
+        },
+        {
+          "type": "object",
+          "name": "customerData"
+        },
+        {
+          "type": "text",
+          "name": "slideType"
+        },
+        {
+          "type": "datetime",
+          "name": "createdAt"
+        },
+        {
+          "type": "datetime",
+          "name": "updatedAt"
+        }
+      ],
+      "outputType": "array",
+      "type": "dbconnector_select"
+    }
+  }
+}

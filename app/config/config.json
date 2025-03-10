@@ -1,0 +1,14 @@
+{
+    "debug": false,
+    "secret": "vFaA0D7YUQlnSH3",
+    "cors": {
+        "origin": "*"
+    },
+    "redis": "redis://redis",
+    "session": {
+        "store": {
+            "$type": "redis",
+            "ttl": 86400
+        }
+    }
+}

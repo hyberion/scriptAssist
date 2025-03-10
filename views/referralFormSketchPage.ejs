@@ -1,0 +1,58 @@
+<!-- Wappler include head-page="layouts/public" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="referralFormSketchPage" appconnect="local" components="{dmxBrowser:{}}" dmx-bind:title="'Referral Note Sketch'" -->
+<div is="dmx-browser" id="browser1" dmx-bind:title="'Referral Tool Sketch'"></div>
+<meta name="ac:route" content="/referralFormSketchPage">
+<div class="container-fluid flex mainWrapper" id="mainWrapper">
+    <div class="row flex align-items-center justify-content-center" id="contentRow">
+        <div class="col">
+            <!-- Toggle Button -->
+            <button class="btn btn-primary" id="toggleReferralBtn" data-bs-toggle="collapse" data-bs-target="#referralCollapse">
+                Add Referral
+            </button>
+
+            <!-- Collapsible Referral Form -->
+            <div class="collapse mt-3" id="referralCollapse">
+                <div class="card card-body">
+                    <form id="referralForm" method="post" is="dmx-serverconnect-form" action="dmxConnect/api/addReferral.php">
+                        <div class="form-group mb-3">
+                            <label for="referralName">Referral Name</label>
+                            <input type="text" class="form-control" id="referralName" name="referral_name" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="referralPhone">Phone</label>
+                            <input type="tel" class="form-control" id="referralPhone" name="referral_phone" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="referralEmail">Email</label>
+                            <input type="email" class="form-control" id="referralEmail" name="referral_email">
+                        </div>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success">Save Referral</button>
+                        <!-- Add Another Button -->
+                        <button type="button" class="btn btn-secondary ms-2" dmx-on:click="resetReferralForm()">Add Another</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScript to Change Button Text and Color -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+    var referralCollapse = document.getElementById("referralCollapse");
+    var toggleButton = document.getElementById("toggleReferralBtn");
+
+    referralCollapse.addEventListener("show.bs.collapse", function () {
+        toggleButton.innerText = "Close Referral";
+        toggleButton.classList.remove("btn-primary");
+        toggleButton.classList.add("btn-danger");
+    });
+
+    referralCollapse.addEventListener("hide.bs.collapse", function () {
+        toggleButton.innerText = "Add Referral";
+        toggleButton.classList.remove("btn-danger");
+        toggleButton.classList.add("btn-primary");
+    });
+});
+        </script>
+
+    </div>
+</div>

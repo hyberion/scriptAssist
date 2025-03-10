@@ -1,0 +1,28 @@
+<!-- Wappler include fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="sketches" appConnect="local" -->
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-white">Guidance Example</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="guidance" onclick="toggleGuidance(this)">
+            <strong>💡 Guidance:</strong> Click to expand for agent notes.
+            <div class="guidance-content" style="display: none;">
+                Speak confidently and use a friendly tone. Let the customer finish before moving to the next step.
+            </div>
+        </div>
+
+        <div class="instructions">
+            <strong>🔹 Instruction:</strong> Wait for the customer to confirm before proceeding.
+        </div>
+
+        <script>
+            function toggleGuidance(element) {
+        let content = element.querySelector('.guidance-content');
+        content.style.display = content.style.display === "none" ? "block" : "none";
+    }
+        </script>
+
+    </div>
+</div>

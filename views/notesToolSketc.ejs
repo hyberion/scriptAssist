@@ -1,0 +1,34 @@
+<!-- Wappler include head-page="layouts/public" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="notesToolSketc" appConnect="local" -->
+<meta name="ac:route" content="/notesToolSketc">
+<div class="container-fluid notesWrapper" id="notesWrapper">
+    <div class="row">
+        <div class="col">
+
+            <!-- Notes Toggle Button -->
+            <button class="btn btn-secondary mt-3" data-bs-toggle="collapse" data-bs-target="#notesSection">
+                Add Notes
+            </button>
+            <!-- Need to buidl the savenotes function into this later so it automatically logs the notes -->
+            <!-- Collapsible Notes Section -->
+            <div class="collapse mt-3" id="notesSection">
+                <div class="card card-body bg-dark text-light">
+                    <h5>Sales Agent Notes</h5>
+                    <textarea class="form-control" id="agentNotes" name="agentNotes" rows="4" placeholder="Enter notes here..." dmx-on:input="autoSaveNotes.run({leadID: leadByEmail.data.getLeadByEmail.id, notes: agentNotes.value})">
+        </textarea>
+
+                    <small id="saveStatus" class="text-muted">Saving...</small>
+
+                    <!-- Close Button -->
+                    <button type="button" class="btn btn-danger mt-3" data-bs-toggle="collapse" data-bs-target="#notesSection">
+                        Close Notes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Wappler API Action for Auto-Save -->
+            <dmx-serverconnect id="autoSaveNotes" url="dmxConnect/api/saveNotes.php" dmx-hide="true"></dmx-serverconnect>
+
+
+        </div>
+    </div>
+</div>

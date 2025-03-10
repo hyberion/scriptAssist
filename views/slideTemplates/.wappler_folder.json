@@ -1,0 +1,14 @@
+{
+  "slidetemplate.ejs": {
+    "layoutPage": "",
+    "description": ""
+  },
+  "slideBuilder.ejs": {
+    "layoutPage": "slideShowLayout",
+    "description": ""
+  },
+  "slidebuilder2.ejs": {
+    "layoutPage": "slideShowLayout",
+    "description": ""
+  }
+}

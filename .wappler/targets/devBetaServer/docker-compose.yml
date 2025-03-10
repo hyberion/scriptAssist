@@ -1,0 +1,74 @@
+services:
+  db:
+    environment:
+      MYSQL_ROOT_PASSWORD: 'v4yB67Xl'
+      MYSQL_DATABASE: 'scriptassist-build'
+      MYSQL_USER: 'db_user'
+      MYSQL_PASSWORD: 'H1e6WAwc'
+    volumes:
+      - 'db-volume:/var/lib/mysql'
+    ports:
+      - '9906:3306'
+    restart: 'always'
+    logging:
+      options:
+        max-file: '5'
+        max-size: '10m'
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+      - '--default-authentication-plugin=mysql_native_password'
+    build:
+      context: '.'
+      dockerfile: 'db/Dockerfile'
+    networks:
+      proxy: ~
+  web:
+    depends_on:
+      - 'db'
+      - 'redis'
+    restart: 'always'
+    stdin_open: true
+    tty: true
+    logging:
+      options:
+        max-file: '5'
+        max-size: '10m'
+    build:
+      context: '../../../'
+      dockerfile: '.wappler/targets/devBetaServer/web/Dockerfile'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web.entrypoints=web'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web.rule=Host(`beta.script-assist.com`)'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web-secure.entrypoints=websecure'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web-secure.rule=Host(`beta.script-assist.com`)'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web-secure.tls=true'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_web-secure.tls.certresolver=leresolver'
+      - 'traefik.http.services.scriptassist-build__devbetaserver_web.loadbalancer.server.port=3000'
+      - 'traefik.docker.network=wappler-compose_proxy'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_www_web-secure.entrypoints=websecure'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_www_web-secure.rule=Host(`www.beta.script-assist.com`)'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_www_web-secure.tls=true'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_www_web-secure.tls.certresolver=leresolver'
+      - 'traefik.http.middlewares.scriptassist-build__devbetaserver_www-redirect.redirectregex.regex=^https://www.beta.script-assist.com/(.*)'
+      - 'traefik.http.middlewares.scriptassist-build__devbetaserver_www-redirect.redirectregex.replacement=https://beta.script-assist.com/$${1}'
+      - 'traefik.http.middlewares.scriptassist-build__devbetaserver_www-redirect.redirectregex.permanent=true'
+      - 'traefik.http.routers.scriptassist-build__devbetaserver_www_web-secure.middlewares=scriptassist-build__devbetaserver_www-redirect'
+    networks:
+      proxy: ~
+  redis:
+    image: 'redis:alpine'
+    hostname: 'redis'
+    restart: 'always'
+    networks:
+      proxy: ~
+    volumes:
+      - 'redis-volume:/data'
+volumes:
+  db-volume: ~
+  redis-volume: ~
+networks:
+  proxy:
+    name: 'wappler-compose_proxy'
+    external: true

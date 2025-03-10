@@ -1,0 +1,74 @@
+{
+  "routes": [
+    {
+      "path": "/sketches",
+      "page": "partials/sketches",
+      "name": "Sketches"
+    },
+    {
+      "path": "/Home",
+      "page": "Home",
+      "name": "Home Page",
+      "layout": "public"
+    },
+    {
+      "path": "/scriptTest",
+      "page": "scriptTest",
+      "layout": "public",
+      "name": "Script Test"
+    },
+    {
+      "path": "/rebuttalAssist",
+      "page": "rebuttalAssist",
+      "layout": "public"
+    },
+    {
+      "path": "/referralFormSketchPage",
+      "page": "referralFormSketchPage",
+      "layout": "public"
+    },
+    {
+      "path": "/prelaunchformSketch",
+      "page": "prelaunchformSketch",
+      "layout": "public"
+    },
+    {
+      "path": "/notesToolSketc",
+      "page": "notesToolSketc",
+      "layout": "public"
+    },
+    {
+      "path": "/liveFormSketch",
+      "page": "liveFormSketch",
+      "layout": "public"
+    },
+    {
+      "path": "/slideTemplates/slidetemplate",
+      "page": "slideTemplates/slidetemplate"
+    },
+    {
+      "path": "/slideshow",
+      "page": "slideshow",
+      "layout": "slideShowLayout"
+    },
+    {
+      "path": "/slideshow",
+      "page": "slideshow"
+    },
+    {
+      "path": "/slideTemplates/slideBuilder",
+      "page": "slideTemplates/slideBuilder",
+      "layout": "slideShowLayout"
+    },
+    {
+      "path": "/slideTemplates/slidebuilder2",
+      "page": "slideTemplates/slidebuilder2",
+      "layout": "slideShowLayout"
+    },
+    {
+      "path": "/sketches2",
+      "page": "sketches2",
+      "layout": "main"
+    }
+  ]
+}

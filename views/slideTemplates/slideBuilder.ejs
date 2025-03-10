@@ -1,0 +1,29 @@
+<!-- Wappler include head-page="layouts/slideShowLayout" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="slideBuilder" appConnect="local" -->
+<meta name="ac:route" content="/slideTemplates/slideBuilder">
+<dmx-serverconnect id="getSingleSlide" url="/api/presentations/getSingleSlide" dmx-param:slideid="5"></dmx-serverconnect>
+<div id="slideWrapper">
+    <div id="slide" class="slide two-column" dmx-bind:style="'background-image: url(' + getSingleSlide.data.getSingleSlide[0].slideURL + ');'">
+        <h1 dmx-text="getSingleSlide.data.getSingleSlide[0].slideTitle" class="text-body"></h1>
+        <div class="slide-content">
+
+            <!-- Left Column -->
+
+            <div class="slide-left">
+                <h1>WILL AND TESTAMENT, LIVING WILL & WORKBOOK KIT</h1>
+
+                <img alt="Big Logo" class="big-logo" src="/assets/slides/testPresentation/fwkCoin.png">
+                <img src="/assets/slides/testPresentation/globeLife.png">
+
+            </div>
+
+            <!-- Right Column -->
+            <div class="slide-right">
+                <img src="/assets/slides/testPresentation/fwkBooklets.png">
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

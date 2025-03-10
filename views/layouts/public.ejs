@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+
+<head>
+  <base href="/">
+  <script src="/dmxAppConnect/dmxAppConnect.js"></script>
+  <meta charset="UTF-8">
+  <title>Eventual Page Title</title>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/customizedStyles.css" />
+  <script src="/dmxAppConnect/dmxRouting/dmxRouting.js" defer></script>
+  <link rel="stylesheet" href="/dmxAppConnect/dmxAnimateCSS/animate.min.css" />
+  <script src="/dmxAppConnect/dmxAnimateCSS/dmxAnimateCSS.js" defer></script>
+  <script src="/dmxAppConnect/dmxFormatter/dmxFormatter.js" defer></script>
+  <link rel="stylesheet" href="/bootstrap/5/slate/bootstrap.min.css" />
+  <script src="/dmxAppConnect/dmxBrowser/dmxBrowser.js" defer></script>
+</head>
+
+<body is="dmx-app" id="public">
+  <header class="style1">
+    <div class="row align-items-center justify-content-start">
+      <div class="col fw-light align-self-center style2 text-start mt-1 mb-1 ms-4 me-4">
+        <p id="subTitle" class="subTitle">Script Assist Beta</p>
+      </div>
+      <div class="col align-self-center mt-1 mb-1 ms-4 me-4">
+        <div class="row text-center">
+          <div class="col align-self-center">
+            <p id="titlePlaceholder" class="titlePlaceholder text-end">This is just a placeholder.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div is="dmx-view" id="content">
+    <%- await include(content, locals) %>
+  </div>
+  <script src="/bootstrap/5/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

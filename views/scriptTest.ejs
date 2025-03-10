@@ -1,0 +1,60 @@
+<!-- Wappler include head-page="layouts/public" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="scriptTest" appconnect="local" components="{dmxFormatter:{}}" -->
+<meta name="ac:route" content="/scriptTest">
+<dmx-serverconnect id="getSections" url="/api/getSections"></dmx-serverconnect>
+<dmx-serverconnect id="getLines" url="/api/getScriptContent" dmx-param:sectionid="select1.selectedValue"></dmx-serverconnect>
+<div class="container" id="mainWrapper">
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col">
+                    <h3>Script Section</h3>
+                    <select id="select1" class="form-select" dmx-bind:options="getSections.data.sectionQuerry" optiontext="sectionName" optionvalue="id" name="scriptSection" dmx-on:change="getLines.load({ sectionid: value })">
+
+                    </select>
+                    <p>Selected Section ID: {{select1.value}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-end col">
+            <div class="row justify-content-end">
+                <div class="col text-center">
+                    <h4>Script Lines for {{select1.selectedText}}</h4>
+                </div>
+            </div>
+            <div>
+                <div class="d-flex flex-column justify-content-center">
+                    <div dmx-repeat:repeat="getLines.data.getLinesbySection" lines="">
+                        <div class="scriptContent">{{scriptLine}}</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row justify-content-start">
+                <div class="col mt-4 mb-4 text-start">
+                    <button id="nextButton" class="btn btn-info" dmx-bind:disabled="getSections.data.sectionQuerry.isEmpty()" onclick="selectNextSection();">Next</button>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+<script>
+    function selectNextSection() {
+    const selectMenu = document.getElementById('select1'); // Get the select menu
+    const currentIndex = selectMenu.selectedIndex; // Get the currently selected index
+    const nextIndex = currentIndex + 1; // Calculate the next index
+
+    console.log(`Current index: ${currentIndex}, Next index: ${nextIndex}`);
+
+    // Check if the next index exists
+    if (nextIndex < selectMenu.options.length) {
+        selectMenu.selectedIndex = nextIndex; // Move to the next option
+        console.log(`Switching to option: ${selectMenu.options[nextIndex].value}`);
+        selectMenu.dispatchEvent(new Event('change')); // Trigger the change event
+    } else {
+        console.log("No more sections to navigate to.");
+    }
+}
+
+</script>

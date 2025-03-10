@@ -1,0 +1,45 @@
+/* CSS for Script Elements */
+
+/* guidance Styles */
+
+.guidance {
+    background-color: #eef5ff;
+    border-left: 4px solid #007bff;
+    padding: 10px;
+    margin: 10px auto; /* Centers the element */
+    font-style: italic;
+    color: #004085;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    width: 40%; /* Set width to 40% */
+    text-align: center; /* Centers text inside */
+    border-radius: 5px; /* Slight rounding for aesthetics */
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.guidance:hover {
+    background-color: #d9ebff; /* Slightly darker blue on hover */
+}
+
+.guidance-content {
+    display: none; /* Ensures content is hidden by default */
+    margin-top: 5px;
+    text-align: left;
+}
+
+/* Instructions */
+
+.instructions {
+    background-color: #ffffff; /* White background */
+    border: 2px dashed #6c757d; /* Dashed border for differentiation */
+    padding: 12px;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #343a40;
+    text-align: left;
+    font-size: 13px;
+    width: 40%;
+}
+

@@ -1,0 +1,27 @@
+<!-- Wappler include head-page="layouts/slideShowLayout" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="slideshow" appConnect="local" -->
+<dmx-value id="activeSlideIndex" dmx-bind:value="0"></dmx-value>
+
+<meta name="ac:route" content="/slideshow">
+<dmx-serverconnect id="getSlides" url="/api/presentations/getSlides"></dmx-serverconnect>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div id="slideWrapper">
+
+                <div id="slides" is="dmx-repeat" dmx-bind:repeat="getSlides.data.getSlides">
+                    <div dmx-html="slideContent" dmx-show="$index==activeSlideIndex.value"></div>>
+                </div>
+
+                <!--End repeat regtion -->
+
+            </div>
+            <div id="navButtons" class="d-flex flex-row justify-content-center mw-100">
+                <button id="prevSlide" class="nav-button btn btn-light" dmx-on:click="activeSlideIndex.setValue(activeSlideIndex.value-1)">Previous</button>
+                <button id="nextSlide" class="nav-button btn btn-light ms-4" dmx-on:click="activeSlideIndex.setValue(activeSlideIndex.value+1)">Next</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</div>

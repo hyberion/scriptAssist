@@ -1,0 +1,119 @@
+<!-- Wappler include head-page="layouts/public" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="liveFormSketch" appConnect="local" components="{dmxFormatter:{}}" -->
+<meta name="ac:route" content="/liveFormSketch">
+<div class="container-fluid formsWrapper" id="formsWrapper">
+    <dmx-global>
+        <dmx-value id="field1" value="" dmx-bind:value="33"></dmx-value>
+        <dmx-value id="field2" value="" dmx-bind:value="'This is a value'"></dmx-value>
+        <dmx-value id="field3" value="" dmx-bind:value="10"></dmx-value>
+        <dmx-value id="field4" value="" dmx-bind:value="20"></dmx-value>
+        <dmx-value id="field5" value="" dmx-bind:value="0"></dmx-value>
+        <dmx-value id="mathTotal" dmx-bind:value="30"></dmx-value>
+    </dmx-global>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Agent View -->
+            <div class="col-md-6">
+                <div class="card bg-dark text-light p-3">
+                    <h4 class="text-center">Agent View</h4>
+                    <form id="agentForm">
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput1inp" class="col-sm-2 col-form-label">Agent 1</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="agentInput1inp" name="agentInput1" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field1.value" dmx-on:blur="field1.setValue(value)">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput2inp" class="col-sm-2 col-form-label">Agent 2</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="agentInput2inp" name="agentInput2" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field2.value" dmx-on:blur="field2.setValue(value)">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput3inp" class="col-sm-2 col-form-label">Math Value 1 (Agent)</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="agentInput3inp" name="agentInput3" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field3.value">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput4inp" class="col-sm-2 col-form-label">Math Value 2 (agent)</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="agentInput4inp" name="agentInput4" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field4.value">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput5inp" class="col-sm-2 col-form-label">Math Total</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="agentInput5inp" name="agentInput5" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="(agentInput3inp.value.toNumber()+ agentInput4inp.value.toNumber()).toFixed(2)" dmx-on:blur="mathTotal.setValue(value)">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="agentInput6inp" class="col-sm-2 col-form-label">Multiplication Test<br>(1*2)</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="agentInput6inp" name="agentInput6" aria-describedby="input2_help" placeholder="Enter some text" dmx-bind:value="(agentInput3inp.value.toNumber() * agentInput4inp.value.toNumber()).toFixed(2)">
+                                <small id="input2_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+
+
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- Customer View -->
+            <div class="col-md-6">
+                <div class="card bg-secondary text-light p-3">
+                    <h4 class="text-center">Customer View</h4>
+                    <form id="customerForm">
+                        <div class="form-group mb-3 row">
+                            <label for="custInput1inp" class="col-sm-2 col-form-label">Customer 1</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custInput1inp" name="custInput1" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field1.value">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="custinput2inp" class="col-sm-2 col-form-label">Customer 2</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="custinput2inp" name="custInput2" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="field2.value">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="input1" class="col-sm-2 col-form-label">Math Total</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input1" name="input1" aria-describedby="input1_help" placeholder="Enter some text" dmx-bind:value="mathTotal.value">
+                                <small id="input1_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3 row">
+                            <label for="input2" class="col-sm-2 col-form-label">Multipican Total</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="input2" name="input2" aria-describedby="input2_help" placeholder="Enter some text" dmx-bind:value="agentForm.agentInput6inp.value">
+                                <small id="input2_help" class="form-text text-muted">Your input is very valuable.</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debugging -->
+    <p>DEBUG: Field 1 = {{field1.value}}</p>
+    <p>Debug math Total: {{mathTotal.value}}</p>
+    <p>DEBUT Field 2: {{field2.value}}</p>
+
+
+
+
+
+
+
+</div>

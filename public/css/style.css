@@ -1,0 +1,226 @@
+.style1 {
+    height: auto;
+    display: block;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center
+}
+.style2 {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+            flex-direction: column
+}
+.style3 {
+    height: 100vh;
+    width: 100vw;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center
+}
+.style4 {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.style5 {
+    font-size: 14px
+}
+.style6 {
+    background-color: #2c2c2c
+}
+.wappler-temp {
+}
+.mainWrapper {
+    height: 100vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center
+}
+.contentmainwrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    height: 100vh
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.notesWrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100vh;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.wappler-temp {
+}
+.formsWrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    height: 100vh
+}
+.slide-title {
+    color: #fff;
+    font-weight: bolder;
+    font-family: sans-serif;
+    font-size: 50px
+}

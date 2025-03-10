@@ -1,0 +1,51 @@
+services:
+  traefik:
+    image: 'traefik:v2.5'
+    container_name: 'traefik'
+    restart: 'always'
+    security_opt:
+      - 'no-new-privileges:true'
+    networks:
+      - 'proxy'
+    command:
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.websecure.address=:443'
+      - '--entrypoints.web.http.redirections.entryPoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entryPoint.scheme=https'
+      - '--certificatesresolvers.leresolver.acme.httpchallenge=true'
+      - '--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web'
+      - '--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json'
+      - '--certificatesresolvers.leresolver.acme.tlschallenge=true'
+      - '--certificatesresolvers.leresolver.acme.email=b.haarer@thesolutionhq.com'
+      - '--api.dashboard=true'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - 'letsencrypt:/letsencrypt'
+    logging:
+      options:
+        max-file: '5'
+        max-size: '10m'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.traefik.entrypoints=web'
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.script-assist.com`)'
+      - 'traefik.http.routers.traefik.service=api@internal'
+      - 'traefik.http.routers.traefik-secure.entrypoints=websecure'
+      - 'traefik.http.routers.traefik-secure.rule=Host(`traefik.script-assist.com`)'
+      - 'traefik.http.routers.traefik-secure.tls=true'
+      - 'traefik.http.routers.traefik.tls.certresolver=leresolver'
+      - 'traefik.http.routers.traefik-secure.service=api@internal'
+      - 'traefik.http.middlewares.traefik-auth.basicauth.users=traefikAdmin:$$apr1$$soppQafj$$r6TqSqmZgGlF2I4v1sgUo1'
+      - 'traefik.http.routers.traefik.middlewares=traefik-auth'
+      - 'traefik.http.routers.traefik-secure.middlewares=traefik-auth'
+volumes:
+  letsencrypt:
+    driver: 'local'
+networks:
+  proxy: ~

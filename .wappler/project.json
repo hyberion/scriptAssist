@@ -1,0 +1,134 @@
+{
+  "projectName": "ScriptAssist-Build",
+  "styleFile": "/css/style.css",
+  "assetsFolder": "/assets",
+  "designFramework": "bootstrap5",
+  "frameworks": [
+    {
+      "name": "fontawesome_5",
+      "type": "cdn"
+    },
+    {
+      "name": "bootstrap5",
+      "type": "local"
+    },
+    {
+      "name": "appConnect",
+      "type": "local"
+    }
+  ],
+  "hostingType": "docker",
+  "projectServerModel": "node",
+  "runtime": "capacitor",
+  "webRootFolder": "/public",
+  "useRouting": true,
+  "addBase": true,
+  "routingHandler": "node",
+  "projectLinksType": "site",
+  "targets": [
+    {
+      "name": "Development",
+      "remoteURL": "http://localhost:8100",
+      "webServerPort": 8100,
+      "webServerLang": "node",
+      "targetType": "docker",
+      "webServer": "node",
+      "NodeVersion": "lts",
+      "NodeOS": "alpine",
+      "NodeImageType": "slim",
+      "webLoggingMaxFiles": "5",
+      "webLoggingMaxFileSize": "10m",
+      "databaseLoggingMaxFiles": "5",
+      "databaseLoggingMaxFileSize": "10m",
+      "dockerTimezone": "Etc/UTC",
+      "databaseType": "mysql",
+      "mySQLVersion": "8.0.x",
+      "noSampleData": true,
+      "useRedis": true,
+      "redisPersist": true,
+      "databasePort": 9906,
+      "mySQL_rootPassword": "v4yB67Xl",
+      "mySQL_databaseName": "scriptassist-build",
+      "mySQL_username": "db_user",
+      "mySQL_password": "H1e6WAwc"
+    },
+    {
+      "name": "devBetaServer",
+      "remoteURL": "https://beta.script-assist.com",
+      "webServerLang": "node",
+      "targetType": "docker",
+      "webServer": "node",
+      "NodeVersion": "lts",
+      "NodeOS": "alpine",
+      "webLoggingMaxFiles": "5",
+      "webLoggingMaxFileSize": "10m",
+      "databaseLoggingMaxFiles": "5",
+      "databaseLoggingMaxFileSize": "10m",
+      "dockerTimezone": "America/New_York",
+      "databaseType": "mysql",
+      "mySQLVersion": "8.0.x",
+      "noSampleData": true,
+      "useRedis": true,
+      "redisPersist": true,
+      "databasePort": 9906,
+      "mySQL_rootPassword": "v4yB67Xl",
+      "mySQL_databaseName": "scriptassist-build",
+      "mySQL_username": "db_user",
+      "mySQL_password": "H1e6WAwc",
+      "usage": "stage",
+      "dockerType": "remote",
+      "dockerProtocol": "ssh",
+      "dockerHost": "157.245.89.22",
+      "dockerServerName": "digitalocean / scriptAsssitLiveBeta",
+      "dockerProjectName": "scriptassist-build__devbetaserver",
+      "NodeImageType": "slim"
+    }
+  ],
+  "activeTarget": "Development",
+  "projectType": "web",
+  "extensions": [],
+  "resources": {
+    "providers": {
+      "digitalocean": {
+        "provider-api-key": "dop_v1_dede00dc1489febe0b408926a9bae743097e296b1d987bbce86f274e08d072a7",
+        "ssh-key-id": 44601148,
+        "ssh-key-file": "~/.ssh/id_ed25519.pub",
+        "server": {
+          "scriptAsssitLiveBeta": {
+            "id": 469461661,
+            "status": "running",
+            "access": true,
+            "ip_address": "157.245.89.22",
+            "region": "New York 1",
+            "price": 18,
+            "vcpus": 2,
+            "memory": 2048,
+            "disk": 60,
+            "transfer": 3,
+            "ssh_keys": [
+              {
+                "ssh-key-file": "~/.ssh/id_ed25519.pub",
+                "name": "id_ed25519",
+                "type": "ed25519",
+                "fingerprint": "04:c3:38:80:e3:72:2d:31:00:7e:54:36:43:8d:82:d5",
+                "id": 44601148
+              }
+            ],
+            "services": {
+              "traefik": {}
+            }
+          }
+        },
+        "ssh_key": {
+          "id_ed25519": {
+            "ssh-key-file": "~/.ssh/id_ed25519.pub",
+            "name": "id_ed25519",
+            "type": "ed25519",
+            "fingerprint": "04:c3:38:80:e3:72:2d:31:00:7e:54:36:43:8d:82:d5",
+            "id": 44601148
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "Home.ejs": {
+    "description": ""
+  },
+  "scriptTest.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "rebuttalAssist.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "referralFormSketchPage.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "prelaunchformSketch.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "notesToolSketc.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "liveFormSketch.ejs": {
+    "layoutPage": "public",
+    "description": ""
+  },
+  "slideshow.ejs": {
+    "layoutPage": "slideShowLayout",
+    "description": ""
+  },
+  "sketches2.ejs": {
+    "layoutPage": "main",
+    "description": ""
+  }
+}

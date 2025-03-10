@@ -1,0 +1,185 @@
+<!-- Wappler include head-page="layouts/public" fontawesome_5="cdn" bootstrap5="local" is="dmx-app" id="prelaunchformSketch" appConnect="local" -->
+<meta name="ac:route" content="/prelaunchformSketch">
+<div class="container-fluid contentmainwrapper" id="contentMainWrapper">
+    <div class="row">
+        <div class="col">
+            <!-- Presentation Pre-Launch Form Toggle Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="collapse" data-bs-target="#preLaunchForm">
+                Start Presentation Pre-Launch
+            </button>
+
+            <!-- Collapsible Container -->
+            <div class="collapse" id="preLaunchForm">
+                <div class="card card-body bg-dark text-light">
+                    <h4>Customer Information</h4>
+                    <form id="preLaunchForm" method="post" is="dmx-serverconnect-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="clientFirstName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="clientLastName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" name="clientAddress">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">City</label>
+                                    <input type="text" class="form-control" name="clientCity">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">State</label>
+                                    <input type="text" class="form-control" name="clientState">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Zip</label>
+                                    <input type="text" class="form-control" name="clientZip">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" name="clientPhone">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="clientEmail">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5>Employment & Membership</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Employer</label>
+                            <input type="text" class="form-control" name="clientEmployer">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Union Membership</label>
+                            <input type="text" class="form-control" name="clientUnionMembership">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" class="form-control" name="clientDOB">
+                        </div>
+
+                        <!-- Spouse Toggle -->
+                        <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="collapse" data-bs-target="#spouseContainer">
+                            Add Spouse/Significant Other
+                        </button>
+                        <div class="collapse mt-3" id="spouseContainer">
+                            <div class="card card-body bg-secondary text-light">
+                                <h5>Spouse/Significant Other</h5>
+                                <div class="mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" name="spouseFirstName">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" name="spouseLastName">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" class="form-control" name="spousePhone">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" name="spouseEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" name="spouseDOB">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dependents Toggle -->
+                        <button type="button" class="btn btn-secondary mt-3" data-bs-toggle="collapse" data-bs-target="#dependentsContainer">
+                            Add Dependents
+                        </button>
+                        <div class="collapse mt-3" id="dependentsContainer">
+                            <div class="card card-body bg-secondary text-light">
+                                <h5>Dependents</h5>
+                                <div id="dependentsList">
+                                    <div class="dependent-entry">
+                                        <div class="mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" name="dependentFirstName[]">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" name="dependentLastName[]">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Relationship</label>
+                                            <input type="text" class="form-control" name="dependentRelationship[]">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Date of Birth</label>
+                                            <input type="date" class="form-control" name="dependentDOB[]">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-light mt-2" onclick="addDependent()">Add Another Dependent</button>
+                            </div>
+                        </div>
+
+                        <!-- Slide Selection -->
+                        <h5 class="mt-4">Select Slides to Include</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="slideSelection[]" value="slide1">
+                            <label class="form-check-label">Slide 1</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="slideSelection[]" value="slide2">
+                            <label class="form-check-label">Slide 2</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="slideSelection[]" value="slide3">
+                            <label class="form-check-label">Slide 3</label>
+                        </div>
+                        <!-- Close Button -->
+                        <button type="button" class="btn btn-danger mt-3" data-bs-toggle="collapse" data-bs-target="#preLaunchForm">
+                            Close Form
+                        </button>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success mt-3">Save & Proceed</button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                function addDependent() {
+    let container = document.getElementById("dependentsList");
+    let newEntry = document.createElement("div");
+    newEntry.innerHTML = `
+        <div class="dependent-entry mt-3">
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" name="dependentFirstName[]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="dependentLastName[]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Relationship</label>
+                <input type="text" class="form-control" name="dependentRelationship[]">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" name="dependentDOB[]">
+            </div>
+        </div>
+    `;
+    container.appendChild(newEntry);
+}
+            </script>
+
+
+        </div>
+    </div>
+</div>
