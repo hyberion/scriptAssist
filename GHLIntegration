@@ -1,0 +1,532 @@
+## 🛰️ **GHL Integration Module - Standalone Satellite Architecture Plan**
+
+### **Philosophy: Isolated Module Design**
+The GHL integration will be built as a **completely separate subsystem** that:
+- Has its own routes, pages, components, and logic
+- **Never imports** from core ScriptAssist components (Scripts, Presentations, Forms, etc.)
+- Touches the core application **only** at the database level (shared tables)
+- Can be disabled/removed without affecting core functionality
+- Has its own UI accessed via dedicated routes
+
+---
+
+## 📁 **New Directory Structure**
+
+```
+src/
+├── modules/
+│   └── ghl-integration/              # Standalone GHL module
+│       ├── pages/
+│       │   ├── GHLLaunchPresentation.tsx    # Token landing page
+│       │   ├── GHLPresentationView.tsx      # Lightweight presentation viewer
+│       │   └── GHLSettings.tsx              # GHL-specific settings
+│       ├── components/
+│       │   ├── GHLScriptRenderer.tsx        # Simplified script display
+│       │   ├── GHLFormCapture.tsx           # Form data collection
+│       │   ├── GHLOutcomeModal.tsx          # Call outcome selection
+│       │   └── GHLWebhookConfig.tsx         # Webhook token/key UI
+│       ├── hooks/
+│       │   ├── useGHLPresentation.ts        # Presentation state for GHL
+│       │   ├── useGHLWebhookAuth.ts         # Token/key management
+│       │   └── useGHLOutbound.ts            # Webhook sending logic
+│       ├── services/
+│       │   ├── ghlDataMapper.ts             # Map GHL fields → SA fields
+│       │   ├── ghlPresentationEngine.ts     # Lightweight presentation logic
+│       │   └── ghlWebhookSender.ts          # Outbound webhook handler
+│       └── types/
+│           ├── ghl-webhook.ts               # GHL webhook payload types
+│           └── ghl-presentation.ts          # GHL presentation types
+│
+├── pages/                             # Core app pages (unchanged)
+├── components/                        # Core app components (unchanged)
+└── hooks/                             # Core app hooks (unchanged)
+
+supabase/
+└── functions/
+    ├── receive-ghl-lead/              # NEW: Inbound webhook endpoint
+    │   └── index.ts
+    └── send-ghl-outcome/              # NEW: Outbound webhook sender
+        └── index.ts
+```
+
+---
+
+## 🔐 **Database Changes (Minimal Core Impact)**
+
+### **1. New Table: `ghl_webhook_tokens`**
+```sql
+CREATE TABLE ghl_webhook_tokens (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  agent_id UUID REFERENCES agents(id) ON DELETE CASCADE,
+  webhook_token UUID DEFAULT gen_random_uuid(),
+  webhook_public_key TEXT,
+  webhook_enabled BOOLEAN DEFAULT true,
+  webhook_last_used TIMESTAMPTZ,
+  rate_limit_count INTEGER DEFAULT 0,
+  rate_limit_reset TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_ghl_tokens_agent ON ghl_webhook_tokens(agent_id);
+CREATE INDEX idx_ghl_tokens_lookup ON ghl_webhook_tokens(webhook_token) 
+  WHERE webhook_enabled = true;
+```
+
+**Why separate table?** Keeps GHL-specific auth isolated from core `agents` table. Can be dropped without affecting core functionality.
+
+---
+
+### **2. New Table: `ghl_presentations`**
+```sql
+CREATE TABLE ghl_presentations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  -- GHL-specific identifiers
+  external_lead_id TEXT NOT NULL,
+  ghl_contact_id TEXT,
+  ghl_opportunity_id TEXT,
+
+  -- Links to core tables (but stored separately)
+  agent_id UUID REFERENCES agents(id),
+  client_id UUID REFERENCES clients(id),
+  script_id UUID REFERENCES scripts(id),
+  agency_id UUID REFERENCES agencies(id),
+
+  -- Presentation lifecycle
+  launch_token TEXT UNIQUE,
+  token_used_at TIMESTAMPTZ,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
+  duration_seconds INTEGER,
+
+  -- Outcome tracking
+  outcome TEXT, -- 'sale', 'follow_up', 'no_interest', 'callback'
+  outcome_notes TEXT,
+
+  -- Form data (denormalized for GHL)
+  collected_form_data JSONB DEFAULT '{}',
+
+  -- Webhook tracking
+  inbound_webhook_received_at TIMESTAMPTZ DEFAULT now(),
+  outbound_webhook_sent_at TIMESTAMPTZ,
+  outbound_webhook_response JSONB,
+
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_ghl_pres_external_lead ON ghl_presentations(external_lead_id);
+CREATE INDEX idx_ghl_pres_launch_token ON ghl_presentations(launch_token) 
+  WHERE token_used_at IS NULL;
+CREATE INDEX idx_ghl_pres_agent ON ghl_presentations(agent_id);
+```
+
+**Why separate table?** 
+- GHL presentations have different data requirements (external IDs, webhook tracking)
+- Core `presentations` table stays clean for core app functionality
+- Can track GHL-specific metrics independently
+
+---
+
+### **3. New Table: `ghl_webhook_log`**
+```sql
+CREATE TABLE ghl_webhook_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  ghl_presentation_id UUID REFERENCES ghl_presentations(id),
+  direction TEXT NOT NULL CHECK (direction IN ('inbound', 'outbound')),
+
+  -- Request details
+  webhook_url TEXT,
+  request_payload JSONB,
+  request_headers JSONB,
+
+  -- Response details
+  response_status INTEGER,
+  response_body JSONB,
+  error_message TEXT,
+
+  -- Timing
+  sent_at TIMESTAMPTZ DEFAULT now(),
+  response_received_at TIMESTAMPTZ,
+
+  -- Retry tracking
+  attempt_number INTEGER DEFAULT 1,
+  retry_scheduled_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_ghl_webhook_log_presentation ON ghl_webhook_log(ghl_presentation_id);
+CREATE INDEX idx_ghl_webhook_log_direction ON ghl_webhook_log(direction);
+```
+
+**Why separate log?** Dedicated GHL webhook monitoring without cluttering core `data_access_log`.
+
+---
+
+### **4. Extend `agencies` Table (Minimal Addition)**
+```sql
+ALTER TABLE agencies
+ADD COLUMN ghl_integration_enabled BOOLEAN DEFAULT false,
+ADD COLUMN ghl_outbound_webhook_url TEXT,
+ADD COLUMN ghl_webhook_custom_headers JSONB,
+ADD COLUMN ghl_field_mapping JSONB; -- Maps GHL fields to SA client fields
+```
+
+**Impact:** Minor. These columns are `NULL`/`false` by default, so existing agencies are unaffected.
+
+---
+
+## 🚀 **New Routes (Isolated from Core)**
+
+Add to `src/App.tsx`:
+
+```tsx
+// GHL Integration Routes (isolated module)
+import GHLLaunchPresentation from "./modules/ghl-integration/pages/GHLLaunchPresentation";
+import GHLPresentationView from "./modules/ghl-integration/pages/GHLPresentationView";
+import GHLSettings from "./modules/ghl-integration/pages/GHLSettings";
+
+// In :
+} 
+/>
+} 
+/>
+
+  } 
+/>
+```
+
+**Key:** These routes are prefixed with `/ghl/` to clearly separate them from core routes.
+
+---
+
+## 🎯 **Edge Functions (Satellite Backend)**
+
+### **1. `receive-ghl-lead` (Inbound)**
+
+**Purpose:** Accept webhook from GHL, validate, create/update client, generate launch token.
+
+```typescript
+// supabase/functions/receive-ghl-lead/index.ts
+
+Deno.serve(async (req) => {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  };
+
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const payload = await req.json();
+
+    // Validate webhook authentication
+    const { agent_token, agent_public_key, lead_data } = payload;
+
+    // Query ghl_webhook_tokens table (NOT agents table)
+    const { data: tokenData, error: tokenError } = await supabaseClient
+      .from('ghl_webhook_tokens')
+      .select('agent_id, webhook_enabled, rate_limit_count, rate_limit_reset')
+      .eq('webhook_token', agent_token)
+      .eq('webhook_public_key', agent_public_key)
+      .single();
+
+    if (tokenError || !tokenData || !tokenData.webhook_enabled) {
+      return new Response(JSON.stringify({ error: 'Invalid webhook credentials' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Rate limiting logic...
+
+    // Create/update client using lead_data...
+
+    // Generate launch token with expiry (15 min)
+    const launchToken = await generateSecureLaunchToken({
+      agent_id: tokenData.agent_id,
+      client_id: clientId,
+      script_id: lead_data.script_id,
+      external_lead_id: lead_data.ghl_contact_id,
+      exp: Date.now() + (15 * 60 * 1000)
+    });
+
+    // Insert into ghl_presentations table
+    const { data: ghlPresentation } = await supabaseClient
+      .from('ghl_presentations')
+      .insert({
+        external_lead_id: lead_data.ghl_contact_id,
+        agent_id: tokenData.agent_id,
+        client_id: clientId,
+        script_id: lead_data.script_id,
+        launch_token: launchToken,
+        ghl_contact_id: lead_data.ghl_contact_id
+      })
+      .select()
+      .single();
+
+    // Log webhook receipt
+    await supabaseClient.from('ghl_webhook_log').insert({
+      ghl_presentation_id: ghlPresentation.id,
+      direction: 'inbound',
+      request_payload: payload,
+      response_status: 200
+    });
+
+    return new Response(JSON.stringify({
+      success: true,
+      launch_url: `${req.headers.get('origin')}/ghl/launch/${launchToken}`,
+      presentation_id: ghlPresentation.id
+    }), {
+      status: 200,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+
+  } catch (error) {
+    console.error('GHL webhook error:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+});
+```
+
+---
+
+### **2. `send-ghl-outcome` (Outbound)**
+
+**Purpose:** Send presentation outcome + form data back to GHL.
+
+```typescript
+// supabase/functions/send-ghl-outcome/index.ts
+
+Deno.serve(async (req) => {
+  // Called by GHL module when presentation completes
+
+  const { ghl_presentation_id, outcome, outcome_notes } = await req.json();
+
+  // Fetch GHL presentation data
+  const { data: ghlPres } = await supabaseClient
+    .from('ghl_presentations')
+    .select('*, agencies!inner(ghl_outbound_webhook_url, ghl_webhook_custom_headers)')
+    .eq('id', ghl_presentation_id)
+    .single();
+
+  if (!ghlPres.agencies.ghl_outbound_webhook_url) {
+    return new Response(JSON.stringify({ error: 'No outbound webhook configured' }), {
+      status: 400
+    });
+  }
+
+  // Build payload
+  const payload = {
+    external_lead_id: ghlPres.external_lead_id,
+    ghl_contact_id: ghlPres.ghl_contact_id,
+    presentation_id: ghlPres.id,
+    outcome,
+    outcome_notes,
+    started_at: ghlPres.started_at,
+    completed_at: ghlPres.completed_at,
+    duration_seconds: ghlPres.duration_seconds,
+    collected_form_data: ghlPres.collected_form_data
+  };
+
+  // Send to GHL webhook
+  const webhookResponse = await fetch(ghlPres.agencies.ghl_outbound_webhook_url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...ghlPres.agencies.ghl_webhook_custom_headers
+    },
+    body: JSON.stringify(payload)
+  });
+
+  // Log webhook attempt
+  await supabaseClient.from('ghl_webhook_log').insert({
+    ghl_presentation_id: ghlPres.id,
+    direction: 'outbound',
+    webhook_url: ghlPres.agencies.ghl_outbound_webhook_url,
+    request_payload: payload,
+    response_status: webhookResponse.status,
+    response_body: await webhookResponse.json()
+  });
+
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
+});
+```
+
+---
+
+## 🔧 **Core Functionality Isolation**
+
+### **What the GHL Module Can Do WITHOUT Importing Core:**
+
+1. **Read shared database tables** (clients, scripts, agents, agencies)
+2. **Write to GHL-specific tables** (ghl_presentations, ghl_webhook_log)
+3. **Use Supabase client** directly for queries
+4. **Render its own simplified UI** components
+5. **Call its own edge functions** for webhook handling
+
+### **What the GHL Module CANNOT Do:**
+
+1. ❌ Import from `src/components/Presentation/ScriptPresentation.tsx`
+2. ❌ Import from `src/hooks/usePresentationState.ts`
+3. ❌ Use `src/services/scriptFormProcessor.ts`
+4. ❌ Rely on core `presentations` table schema
+
+### **How GHL Module Stays Isolated:**
+
+```typescript
+// ❌ BAD - Importing from core
+import { ScriptPresentation } from '@/components/Presentation/ScriptPresentation';
+import { usePresentationState } from '@/hooks/usePresentationState';
+
+// ✅ GOOD - Standalone implementation
+import { GHLScriptRenderer } from '@/modules/ghl-integration/components/GHLScriptRenderer';
+import { useGHLPresentation } from '@/modules/ghl-integration/hooks/useGHLPresentation';
+```
+
+---
+
+## 🎨 **UI Integration Points (Minimal Core Changes)**
+
+### **1. Settings Page - Add GHL Tab**
+
+Modify `src/pages/Settings.tsx`:
+
+```tsx
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import GHLSettings from '@/modules/ghl-integration/pages/GHLSettings';
+
+// In Settings component:
+
+    Profile
+    Account
+    GHL Integration
+
+  ...
+  ...
+
+```
+
+**Impact:** One new tab. Existing tabs unchanged.
+
+---
+
+### **2. Admin Panel - Add GHL Webhook Logs Viewer**
+
+Add optional link in `src/pages/AdminPanel.tsx`:
+
+```tsx
+
+    GHL Integration
+
+      Manage GHL Webhooks
+
+```
+
+**Impact:** One new card. Existing admin functions unchanged.
+
+---
+
+## 🛡️ **Security & Data Isolation**
+
+### **RLS Policies for GHL Tables:**
+
+```sql
+-- ghl_webhook_tokens: Agents can only see their own
+CREATE POLICY "Agents can view own webhook tokens"
+ON ghl_webhook_tokens FOR SELECT
+USING (agent_id IN (SELECT id FROM agents WHERE user_id = auth.uid()));
+
+-- ghl_presentations: Agency-scoped access
+CREATE POLICY "Users can view GHL presentations in their agency"
+ON ghl_presentations FOR SELECT
+USING (agency_id = get_current_user_agency_id());
+
+-- ghl_webhook_log: Manager/admin only
+CREATE POLICY "Managers can view webhook logs"
+ON ghl_webhook_log FOR SELECT
+USING (EXISTS (
+  SELECT 1 FROM agents 
+  WHERE user_id = auth.uid() 
+  AND role IN ('manager', 'system_admin')
+));
+```
+
+---
+
+## 📊 **Data Flow Diagram**
+
+```mermaid
+sequenceDiagram
+    participant GHL as GoHighLevel
+    participant Edge as receive-ghl-lead
+    participant GHL_DB as ghl_presentations table
+    participant Agent as Agent Browser
+    participant GHL_UI as GHL Presentation View
+    participant Outbound as send-ghl-outcome
+
+    GHL->>Edge: POST /receive-ghl-lead(token + key + lead_data)
+    Edge->>Edge: Validate token/key inghl_webhook_tokens table
+    Edge->>GHL_DB: INSERT ghl_presentation record
+    Edge->>GHL: Return launch URL/ghl/launch/{token}
+
+    Agent->>GHL_UI: Click launch URL
+    GHL_UI->>GHL_DB: Fetch presentation data
+    GHL_UI->>Agent: Display script + forms(isolated UI)
+    Agent->>GHL_UI: Complete presentation
+    GHL_UI->>Outbound: Send outcome + form data
+    Outbound->>GHL: POST to GHL webhook(outcome + collected_form_data)
+    Outbound->>GHL_DB: Log outbound webhook
+```
+
+---
+
+## ✅ **Implementation Checklist**
+
+### **Phase 1: Foundation (Database + Auth)**
+- [ ] Create `ghl_webhook_tokens` table + RLS
+- [ ] Create `ghl_presentations` table + RLS
+- [ ] Create `ghl_webhook_log` table + RLS
+- [ ] Extend `agencies` table with GHL columns
+- [ ] Create `receive-ghl-lead` edge function
+- [ ] Create `send-ghl-outcome` edge function
+
+### **Phase 2: GHL Module UI**
+- [ ] Create `/modules/ghl-integration/` directory structure
+- [ ] Build `GHLSettings.tsx` (webhook token/key management)
+- [ ] Build `GHLLaunchPresentation.tsx` (token landing page)
+- [ ] Build `GHLPresentationView.tsx` (simplified presentation UI)
+- [ ] Build `GHLOutcomeModal.tsx` (call outcome selection)
+
+### **Phase 3: Integration Points**
+- [ ] Add GHL tab to Settings page
+- [ ] Add GHL routes to App.tsx
+- [ ] (Optional) Add GHL webhook logs viewer to Admin Panel
+
+### **Phase 4: Testing & Documentation**
+- [ ] Create GHL setup documentation
+- [ ] Test full inbound→presentation→outbound flow
+- [ ] Test token expiry and validation
+- [ ] Test webhook failure scenarios
+- [ ] Create troubleshooting guide
+
+---
+
+## 🎯 **Key Benefits of This Architecture**
+
+1. **Zero Impact on Core**: Entire GHL module can be deleted without breaking anything
+2. **Independent Development**: GHL features can be built/tested in isolation
+3. **Separate Deployment**: GHL edge functions deploy independently
+4. **Clear Boundaries**: `/ghl/` prefix makes integration obvious
+5. **Easy Maintenance**: All GHL code in one place (`/modules/ghl-integration/`)
+6. **Audit Trail**: Dedicated logging separate from core app logs
+7. **Feature Flag Ready**: `ghl_integration_enabled` column allows agency-level control
+
+---
+
+Does this architecture align with what you're envisioning? Should I proceed with implementation, or would you like to adjust any aspect of the design?
